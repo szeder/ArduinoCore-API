@@ -23,4 +23,6 @@
 // version 1.0.0
 #define ARDUINO_API_VERSION 10000
 
+#include "Binary.h"
+
 #endif
