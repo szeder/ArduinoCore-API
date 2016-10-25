@@ -24,5 +24,6 @@
 #define ARDUINO_API_VERSION 10000
 
 #include "Binary.h"
+#include "String.h"
 
 #endif
