@@ -26,9 +26,14 @@
 #include "Binary.h"
 
 #ifdef __cplusplus
+#include "Client.h"
+#include "IPAddress.h"
 #include "Print.h"
+#include "Printable.h"
+#include "Server.h"
 #include "String.h"
 #include "Stream.h"
+#include "Udp.h"
 #endif
 
 #endif
