@@ -28,6 +28,7 @@
 #ifdef __cplusplus
 #include "Print.h"
 #include "String.h"
+#include "Stream.h"
 #endif
 
 #endif
