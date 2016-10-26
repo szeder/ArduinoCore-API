@@ -24,6 +24,10 @@
 #define ARDUINO_API_VERSION 10000
 
 #include "Binary.h"
+
+#ifdef __cplusplus
+#include "Print.h"
 #include "String.h"
+#endif
 
 #endif
