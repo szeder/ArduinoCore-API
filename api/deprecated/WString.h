@@ -1,6 +1,5 @@
 /*
-  dtostrf - Emulation for dtostrf function from avr-libc
-  Copyright (c) 2015 Arduino LLC.  All rights reserved.
+  Copyright 2016, Arduino LLC.  All Right Reserved.
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Lesser General Public
@@ -17,14 +16,9 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#pragma once
+// including WString.h is deprecated, for all future projects use Arduino.h instead
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+// This include is added for compatibility, it will be remove on the next
+// major release of the API
+#include "../String.h"
 
-char *dtostrf(double val, signed char width, unsigned char prec, char *sout);
-
-#ifdef __cplusplus
-}
-#endif

@@ -1,6 +1,6 @@
 /*
   dtostrf - Emulation for dtostrf function from avr-libc
-  Copyright (c) 2016 Arduino LLC.  All rights reserved.
+  Copyright (c) 2015 Arduino LLC.  All rights reserved.
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Lesser General Public
@@ -17,21 +17,18 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-// This is a default implementation for dtostrf function.
-// This file should be used if the standard lib doesn't provide an
-// implementation of dtostrf.
+#pragma once
 
-// Just create a file called "dtostrf.c" with the following include:
-// #include "api/avr/dtostrf.c.impl"
+#if !defined(ARDUINO_ARCH_AVR)
 
-#include <stdio.h>
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-char *dtostrf (double val, signed char width, unsigned char prec, char *sout) {
-  asm(".global _printf_float");
+char *dtostrf(double val, signed char width, unsigned char prec, char *sout);
 
-  char fmt[20];
-  sprintf(fmt, "%%%d.%df", width, prec);
-  sprintf(sout, fmt, val);
-  return sout;
+#ifdef __cplusplus
 }
+#endif
 
+#endif
