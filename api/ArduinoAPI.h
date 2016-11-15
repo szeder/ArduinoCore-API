@@ -27,6 +27,7 @@
 
 #ifdef __cplusplus
 #include "Client.h"
+#include "HardwareI2C.h"
 #include "HardwareSerial.h"
 #include "IPAddress.h"
 #include "Print.h"
