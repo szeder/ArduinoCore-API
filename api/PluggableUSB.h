@@ -22,16 +22,14 @@
 
 #include "USBAPI.h"
 #include <stdint.h>
+#include <stddef.h>
 
 // core need to define
-// EP_BUFFER_TYPE
-// EP_BUFFER_NAME
-
-#if defined(USBCON)
+void* epBuffer(unsigned int n); // -> returns a poointer to the Nth element of the EP buffer structure
 
 class PluggableUSBModule {
 public:
-  PluggableUSBModule(uint8_t numEps, uint8_t numIfs, EP_BUFFER_TYPE *epType) :
+  PluggableUSBModule(uint8_t numEps, uint8_t numIfs, unsigned int *epType) :
     numEndpoints(numEps), numInterfaces(numIfs), endpointType(epType)
   { }
 
@@ -46,7 +44,7 @@ protected:
 
   const uint8_t numEndpoints;
   const uint8_t numInterfaces;
-  const EP_BUFFER_TYPE *endpointType;
+  const unsigned int *endpointType;
 
   PluggableUSBModule *next = NULL;
 
@@ -66,13 +64,12 @@ private:
   uint8_t lastIf;
   uint8_t lastEp;
   PluggableUSBModule* rootNode;
+  uint8_t totalEP;
 };
 
 // Replacement for global singleton.
 // This function prevents static-initialization-order-fiasco
 // https://isocpp.org/wiki/faq/ctors#static-init-order-on-first-use
 PluggableUSB_& PluggableUSB();
-
-#endif
 
 #endif

@@ -20,11 +20,6 @@
 #include "USBAPI.h"
 #include "PluggableUSB.h"
 
-#if defined(USBCON)	
-#ifdef PLUGGABLE_USB_ENABLED
-
-extern _EP_BUFFER_TYPE _EP_BUFFER_NAME[];
-
 int PluggableUSB_::getInterface(uint8_t* interfaceCount)
 {
 	int sent = 0;
@@ -72,7 +67,7 @@ bool PluggableUSB_::setup(USBSetup& setup)
 
 bool PluggableUSB_::plug(PluggableUSBModule *node)
 {
-	if ((lastEp + node->numEndpoints) > USB_ENDPOINTS) {
+	if ((lastEp + node->numEndpoints) > totalEP) {
 		return false;
 	}
 
@@ -90,7 +85,7 @@ bool PluggableUSB_::plug(PluggableUSBModule *node)
 	node->pluggedEndpoint = lastEp;
 	lastIf += node->numInterfaces;
 	for (uint8_t i = 0; i < node->numEndpoints; i++) {
-		_EP_BUFFER_NAME[lastEp] = node->endpointType[i];
+		*(unsigned int*)(epBuffer(lastEp)) = node->endpointType[i];
 		lastEp++;
 	}
 	return true;
@@ -102,14 +97,3 @@ PluggableUSB_& PluggableUSB()
 	static PluggableUSB_ obj;
 	return obj;
 }
-
-PluggableUSB_::PluggableUSB_() : lastIf(CDC_ACM_INTERFACE + CDC_INTERFACE_COUNT),
-                                 lastEp(CDC_FIRST_ENDPOINT + CDC_ENPOINT_COUNT),
-                                 rootNode(NULL)
-{
-	// Empty
-}
-
-#endif
-
-#endif /* if defined(USBCON) */

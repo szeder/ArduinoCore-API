@@ -32,10 +32,21 @@
 #include "IPAddress.h"
 #include "Print.h"
 #include "Printable.h"
+#include "PluggableUSB.h"
 #include "Server.h"
 #include "String.h"
 #include "Stream.h"
 #include "Udp.h"
+#include "USBAPI.h"
 #endif
+
+/* Standard C library includes */
+#include <stdlib.h>
+#include <stdbool.h>
+#include <string.h>
+#include <math.h>
+
+// Misc Arduino core functions
+#include "Common.h"
 
 #endif
