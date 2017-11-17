@@ -7,17 +7,12 @@ extern "C"{
 void yield(void);
 
 typedef enum {
-  LOW   = 0x0,
-  HIGH  = 0x1,
+  LOW     = 0,
+  HIGH    = 1,
+  CHANGE  = 2,
+  FALLING = 3,
+  RISING  = 4,
 } PinStatus;
-
-typedef enum {
-  IRQ_LOW     = 0,
-  IRQ_HIGH    = 1,
-  CHANGE      = 2,
-  FALLING     = 3,
-  RISING      = 4,
-} InterruptMode;
 
 typedef enum {
   INPUT           = 0x0,
@@ -25,6 +20,11 @@ typedef enum {
   INPUT_PULLUP    = 0x2,
   INPUT_PULLDOWN  = 0x3,
 } PinMode;
+
+typedef enum {
+  LSBFIRST = 0,
+  MSBFIRST = 1,
+} BitMode;
 
 #define PI          3.1415926535897932384626433832795
 #define HALF_PI     1.5707963267948966192313216916398
@@ -35,11 +35,6 @@ typedef enum {
 
 #define SERIAL      0x0
 #define DISPLAY     0x1
-
-typedef enum {
-  LSBFIRST = 0,
-  MSBFIRST = 1,
-} BitMode;
 
 #ifndef min
 #define min(a,b) \
@@ -119,10 +114,10 @@ void delayMicroseconds(unsigned int us);
 unsigned long pulseIn(pin_size_t pin, uint8_t state, unsigned long timeout);
 unsigned long pulseInLong(pin_size_t pin, uint8_t state, unsigned long timeout);
 
-void shiftOut(pin_size_t dataPin, pin_size_t clockPin, uint8_t bitOrder, uint8_t val);
-pin_size_t shiftIn(pin_size_t dataPin, pin_size_t clockPin, uint8_t bitOrder);
+void shiftOut(pin_size_t dataPin, pin_size_t clockPin, BitMode bitOrder, uint8_t val);
+pin_size_t shiftIn(pin_size_t dataPin, pin_size_t clockPin, BitMode bitOrder);
 
-void attachInterrupt(pin_size_t interruptNumber, voidFuncPtr callback, InterruptMode mode);
+void attachInterrupt(pin_size_t interruptNumber, voidFuncPtr callback, PinStatus mode);
 void detachInterrupt(pin_size_t interruptNumber);
 
 void setup(void);
