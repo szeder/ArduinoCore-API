@@ -52,10 +52,6 @@ typedef struct __attribute__((packed))
 //================================================================================
 //================================================================================
 
-#define TRANSFER_PGM		0x80
-#define TRANSFER_RELEASE	0x40
-#define TRANSFER_ZERO		0x20
-
 int USB_SendControl(uint8_t flags, const void* d, int len);
 int USB_RecvControl(void* d, int len);
 int USB_RecvControlLong(void* d, int len);

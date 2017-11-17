@@ -38,6 +38,7 @@
 #include "Stream.h"
 #include "Udp.h"
 #include "USBAPI.h"
+#include "WCharacter.h"
 #endif
 
 /* Standard C library includes */

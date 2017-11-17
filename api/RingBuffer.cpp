@@ -18,16 +18,19 @@
 
 #include "RingBuffer.h"
 #include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-RingBuffer::RingBuffer( void )
+RingBuffer::RingBuffer(rb_index_type size = 64) : size(size)
 {
-    memset( _aucBuffer, 0, RINGBUFFER_SIZE ) ;
+    _aucBuffer = (uint8_t*)malloc(size);
+    memset( _aucBuffer, 0, size ) ;
     clear();
 }
 
 void RingBuffer::store_char( uint8_t c )
 {
-    int i = nextIndex(_iHead);
+    rb_index_type i = nextIndex(_iHead);
 
     // if we should be storing the received character into the location
     // just before the tail (meaning that the head would advance to the
@@ -35,10 +38,10 @@ void RingBuffer::store_char( uint8_t c )
     // and so we don't write the character or advance the head.
     if ( i != _iTail )
     {
-        if (_iHead < RINGBUFFER_SIZE) {
+        if (_iHead < size) {
             _aucBuffer[_iHead] = c ;
         } else {
-            additionalBuffer[_iHead - RINGBUFFER_SIZE] = c;
+            additionalBuffer[_iHead - size] = c;
         }
     _iHead = i ;
     }
@@ -56,10 +59,10 @@ int RingBuffer::read_char()
         return -1;
 
     uint8_t value;
-    if (_iTail < RINGBUFFER_SIZE) {
+    if (_iTail < size) {
         value  = _aucBuffer[_iTail];
     } else {
-        value = additionalBuffer[_iTail - RINGBUFFER_SIZE];
+        value = additionalBuffer[_iTail - size];
     }
     _iTail = nextIndex(_iTail);
 
@@ -71,7 +74,7 @@ int RingBuffer::available()
     int delta = _iHead - _iTail;
 
     if(delta < 0)
-        return RINGBUFFER_SIZE + additionalSize + delta;
+        return size + additionalSize + delta;
     else
         return delta;
 }
@@ -81,16 +84,16 @@ int RingBuffer::peek()
     if(_iTail == _iHead)
         return -1;
 
-    if (_iTail < RINGBUFFER_SIZE) {
+    if (_iTail < size) {
         return _aucBuffer[_iTail];
     } else {
-        return additionalBuffer[_iTail - RINGBUFFER_SIZE];
+        return additionalBuffer[_iTail - size];
     }
 }
 
-int RingBuffer::nextIndex(int index)
+rb_index_type RingBuffer::nextIndex(rb_index_type index)
 {
-    return (uint32_t)(index + 1) % (RINGBUFFER_SIZE + additionalSize);
+    return (rb_index_type)(index + 1) % (size + additionalSize);
 }
 
 bool RingBuffer::isFull()

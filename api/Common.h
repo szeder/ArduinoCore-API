@@ -38,23 +38,21 @@ typedef enum {
 } _spi_bitFirst_mode;
 
 #ifndef min
-#define min(a,b) ((a)<(b)?(a):(b))
+#define min(a,b) \
+   ({ __typeof__ (a) _a = (a); \
+       __typeof__ (b) _b = (b); \
+     _a < _b ? _a : _b; })
 #endif
 
 #ifndef max
-#define max(a,b) ((a)>(b)?(a):(b))
-#endif
-
-#ifndef abs
-#define abs(x) ((x)>0?(x):-(x))
+#define max(a,b) \
+   ({ __typeof__ (a) _a = (a); \
+       __typeof__ (b) _b = (b); \
+     _a > _b ? _a : _b; })
 #endif
 
 #ifndef constrain
 #define constrain(amt,low,high) ((amt)<(low)?(low):((amt)>(high)?(high):(amt)))
-#endif
-
-#ifndef round
-#define round(x)     ((x)>=0?(long)((x)+0.5):(long)((x)-0.5))
 #endif
 
 #ifndef radians
