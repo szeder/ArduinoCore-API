@@ -22,26 +22,20 @@
 
 #include <stdint.h>
 
-class USBDevice_
-{
-public:
-	USBDevice_();
-	bool configured();
-
-	void attach();
-	void detach();	// Serial port goes down too...
-	void poll();
-	bool wakeupHost(); // returns false, when wakeup cannot be processed
-};
-extern USBDevice_ USBDevice;
-
 //================================================================================
 //================================================================================
 //  Low level API
 
 typedef struct __attribute__((packed))
 {
-	uint8_t 	bmRequestType;
+  union {
+    uint8_t bmRequestType;
+    struct {
+      uint8_t direction : 5;
+      uint8_t type : 2;
+      uint8_t transferDirection : 1;
+    };
+  };
 	uint8_t 	bRequest;
 	uint8_t 	wValueL;
 	uint8_t 	wValueH;

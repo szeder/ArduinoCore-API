@@ -26,7 +26,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#if defined(__AVR__)
 #include "avr/pgmspace.h"
+#else
+#include "deprecated-avr-comp/avr/pgmspace.h"
+#endif
 
 // When compiling programs with this class, the following gcc parameters
 // dramatically increase performance and memory (RAM) efficiency, typically

@@ -21,7 +21,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-RingBuffer::RingBuffer(rb_index_type size = 64) : size(size)
+RingBuffer::RingBuffer(rb_index_type size) : size(size)
 {
     _aucBuffer = (uint8_t*)malloc(size);
     memset( _aucBuffer, 0, size ) ;
@@ -78,6 +78,16 @@ int RingBuffer::available()
     else
         return delta;
 }
+
+int RingBuffer::availableForStore()
+{
+  int delta = _iHead - _iTail;
+  if (delta >= 0)
+    return size + additionalSize - 1 - delta;
+  else
+    return -delta - 1;
+}
+
 
 int RingBuffer::peek()
 {

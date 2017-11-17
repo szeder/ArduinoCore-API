@@ -1,3 +1,5 @@
+#include <stdint.h>
+
 #ifdef __cplusplus
 extern "C"{
 #endif
@@ -5,37 +7,39 @@ extern "C"{
 void yield(void);
 
 typedef enum {
-  LOW  = 0x0,
-  HIGH = 0x1,
-} _pinStatus;
+  LOW   = 0x0,
+  HIGH  = 0x1,
+} PinStatus;
 
 typedef enum {
-  INPUT         = 0x0,
-  OUTPUT        = 0x1,
-  INPUT_PULLUP  = 0x2,
+  IRQ_LOW     = 0,
+  IRQ_HIGH    = 1,
+  CHANGE      = 2,
+  FALLING     = 3,
+  RISING      = 4,
+} InterruptMode;
+
+typedef enum {
+  INPUT           = 0x0,
+  OUTPUT          = 0x1,
+  INPUT_PULLUP    = 0x2,
   INPUT_PULLDOWN  = 0x3,
-} _pinMode;
+} PinMode;
 
-#define PI 3.1415926535897932384626433832795
-#define HALF_PI 1.5707963267948966192313216916398
-#define TWO_PI 6.283185307179586476925286766559
-#define DEG_TO_RAD 0.017453292519943295769236907684886
-#define RAD_TO_DEG 57.295779513082320876798154814105
-#define EULER 2.718281828459045235360287471352
+#define PI          3.1415926535897932384626433832795
+#define HALF_PI     1.5707963267948966192313216916398
+#define TWO_PI      6.283185307179586476925286766559
+#define DEG_TO_RAD  0.017453292519943295769236907684886
+#define RAD_TO_DEG  57.295779513082320876798154814105
+#define EULER       2.718281828459045235360287471352
 
-#define SERIAL  0x0
-#define DISPLAY 0x1
-
-typedef enum {
-  CHANGE = 1,
-  FALLING = 2,
-  RISING = 3,
-} _interruptMode;
+#define SERIAL      0x0
+#define DISPLAY     0x1
 
 typedef enum {
   LSBFIRST = 0,
   MSBFIRST = 1,
-} _spi_bitFirst_mode;
+} BitMode;
 
 #ifndef min
 #define min(a,b) \
@@ -67,6 +71,8 @@ typedef enum {
 #define sq(x) ((x)*(x))
 #endif
 
+typedef void (*voidFuncPtr)(void);
+
 // interrupts() / noInterrupts() must be defined by the core
 
 #define lowByte(w) ((uint8_t) ((w) & 0xff))
@@ -77,14 +83,14 @@ typedef enum {
 #define bitClear(value, bit) ((value) &= ~(1UL << (bit)))
 #define bitWrite(value, bit, bitvalue) (bitvalue ? bitSet(value, bit) : bitClear(value, bit))
 
-typedef unsigned int word;
-
 #ifndef bit
 #define bit(b) (1UL << (b))
 #endif
 
-typedef bool boolean;
-typedef uint8_t byte;
+/* TODO: request for removal */
+typedef bool      boolean;
+typedef uint8_t   byte;
+typedef uint16_t  word;
 
 void init(void);
 void initVariant(void);
@@ -92,25 +98,32 @@ void initVariant(void);
 int atexit(void (*func)()) __attribute__((weak));
 int main() __attribute__((weak));
 
-void pinMode(uint8_t pinNumber, _pinMode pinMode);
-void digitalWrite(uint8_t pinNumber, _pinStatus status);
-_pinStatus digitalRead(uint8_t pinNumber);
-int analogRead(uint8_t pinNumber);
+#ifdef EXTENDED_PIN_MODE
+// Platforms who wnat to declare more than 256 pins need to define EXTENDED_PIN_MODE globally
+typedef uint32_t pin_size_t;
+#else
+typedef uint8_t pin_size_t;
+#endif
+
+void pinMode(pin_size_t pinNumber, PinMode pinMode);
+void digitalWrite(pin_size_t pinNumber, PinStatus status);
+PinStatus digitalRead(pin_size_t pinNumber);
+int analogRead(pin_size_t pinNumber);
 void analogReference(uint8_t mode);
-void analogWrite(uint8_t pinNumber, int value);
+void analogWrite(pin_size_t pinNumber, int value);
 
 unsigned long millis(void);
 unsigned long micros(void);
 void delay(unsigned long);
 void delayMicroseconds(unsigned int us);
-unsigned long pulseIn(uint8_t pin, uint8_t state, unsigned long timeout);
-unsigned long pulseInLong(uint8_t pin, uint8_t state, unsigned long timeout);
+unsigned long pulseIn(pin_size_t pin, uint8_t state, unsigned long timeout);
+unsigned long pulseInLong(pin_size_t pin, uint8_t state, unsigned long timeout);
 
-void shiftOut(uint8_t dataPin, uint8_t clockPin, uint8_t bitOrder, uint8_t val);
-uint8_t shiftIn(uint8_t dataPin, uint8_t clockPin, uint8_t bitOrder);
+void shiftOut(pin_size_t dataPin, pin_size_t clockPin, uint8_t bitOrder, uint8_t val);
+pin_size_t shiftIn(pin_size_t dataPin, pin_size_t clockPin, uint8_t bitOrder);
 
-void attachInterrupt(uint8_t interruptNumber, void (*callback)(void), _interruptMode mode);
-void detachInterrupt(uint8_t interruptNumber);
+void attachInterrupt(pin_size_t interruptNumber, voidFuncPtr callback, InterruptMode mode);
+void detachInterrupt(pin_size_t interruptNumber);
 
 void setup(void);
 void loop(void);

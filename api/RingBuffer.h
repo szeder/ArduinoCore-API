@@ -37,11 +37,12 @@ typedef unsigned int rb_index_type;
 class RingBuffer
 {
     public:
-    RingBuffer( rb_index_type size ) ;
+    RingBuffer( rb_index_type size = 64 ) ;
     void store_char( uint8_t c ) ;
     void clear();
     int read_char();
     int available();
+    int availableForStore();
     int peek();
     bool isFull();
     void addStorage(uint8_t* _buffer, rb_index_type _size) {
