@@ -24,7 +24,7 @@ typedef enum {
 typedef enum {
   LSBFIRST = 0,
   MSBFIRST = 1,
-} BitMode;
+} BitOrder;
 
 #define PI          3.1415926535897932384626433832795
 #define HALF_PI     1.5707963267948966192313216916398
@@ -114,8 +114,8 @@ void delayMicroseconds(unsigned int us);
 unsigned long pulseIn(pin_size_t pin, uint8_t state, unsigned long timeout);
 unsigned long pulseInLong(pin_size_t pin, uint8_t state, unsigned long timeout);
 
-void shiftOut(pin_size_t dataPin, pin_size_t clockPin, BitMode bitOrder, uint8_t val);
-pin_size_t shiftIn(pin_size_t dataPin, pin_size_t clockPin, BitMode bitOrder);
+void shiftOut(pin_size_t dataPin, pin_size_t clockPin, BitOrder bitOrder, uint8_t val);
+pin_size_t shiftIn(pin_size_t dataPin, pin_size_t clockPin, BitOrder bitOrder);
 
 void attachInterrupt(pin_size_t interruptNumber, voidFuncPtr callback, PinStatus mode);
 void detachInterrupt(pin_size_t interruptNumber);
