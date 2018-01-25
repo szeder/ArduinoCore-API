@@ -114,3 +114,4 @@ size_t IPAddress::printTo(Print& p) const
     return n;
 }
 
+const IPAddress INADDR_NONE(0,0,0,0);
