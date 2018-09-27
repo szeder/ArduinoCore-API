@@ -1,3 +1,4 @@
+#pragma once
 #include <stdint.h>
 
 #ifdef __cplusplus
@@ -67,6 +68,7 @@ typedef enum {
 #endif
 
 typedef void (*voidFuncPtr)(void);
+typedef void (*voidFuncPtrParam)(void*);
 
 // interrupts() / noInterrupts() must be defined by the core
 
@@ -118,6 +120,7 @@ void shiftOut(pin_size_t dataPin, pin_size_t clockPin, BitOrder bitOrder, uint8_
 pin_size_t shiftIn(pin_size_t dataPin, pin_size_t clockPin, BitOrder bitOrder);
 
 void attachInterrupt(pin_size_t interruptNumber, voidFuncPtr callback, PinStatus mode);
+void attachInterruptParam(pin_size_t interruptNumber, voidFuncPtrParam callback, PinStatus mode, void* param);
 void detachInterrupt(pin_size_t interruptNumber);
 
 void setup(void);
