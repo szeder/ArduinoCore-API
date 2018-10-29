@@ -16,6 +16,8 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#ifdef __cplusplus
+
 #ifndef _RING_BUFFER_
 #define _RING_BUFFER_
 
@@ -25,19 +27,18 @@
 // using a ring buffer (I think), in which head is the index of the location
 // to which to write the next incoming character and tail is the index of the
 // location from which to read.
+#define SERIAL_BUFFER_SIZE 64
 
-#define RINGBUFFER_HAS_ADDITIONAL_STORAGE_API
-
-#ifdef RINGBUFFER_FORCE_SMALL_SIZE
-typedef uint8_t rb_index_type;
-#else
-typedef unsigned int rb_index_type;
-#endif
-
-class RingBuffer
+template <int N>
+class RingBufferN
 {
-    public:
-    RingBuffer( rb_index_type size = 64 ) ;
+  public:
+    uint8_t _aucBuffer[N] ;
+    volatile int _iHead ;
+    volatile int _iTail ;
+
+  public:
+    RingBufferN( void ) ;
     void store_char( uint8_t c ) ;
     void clear();
     int read_char();
@@ -45,19 +46,97 @@ class RingBuffer
     int availableForStore();
     int peek();
     bool isFull();
-    void addStorage(uint8_t* _buffer, rb_index_type _size) {
-        additionalSize = _size;
-        additionalBuffer = _buffer;
-    };
 
-    private:
-    rb_index_type nextIndex(rb_index_type index);
-    uint8_t* additionalBuffer;
-    int additionalSize = 0;
-    rb_index_type size;
-    uint8_t* _aucBuffer;
-    volatile rb_index_type _iHead ;
-    volatile rb_index_type _iTail ;
+  private:
+    int nextIndex(int index);
 };
 
+typedef RingBufferN<SERIAL_BUFFER_SIZE> RingBuffer;
+
+
+template <int N>
+RingBufferN<N>::RingBufferN( void )
+{
+    memset( _aucBuffer, 0, N ) ;
+    clear();
+}
+
+template <int N>
+void RingBufferN<N>::store_char( uint8_t c )
+{
+  int i = nextIndex(_iHead);
+
+  // if we should be storing the received character into the location
+  // just before the tail (meaning that the head would advance to the
+  // current location of the tail), we're about to overflow the buffer
+  // and so we don't write the character or advance the head.
+  if ( i != _iTail )
+  {
+    _aucBuffer[_iHead] = c ;
+    _iHead = i ;
+  }
+}
+
+template <int N>
+void RingBufferN<N>::clear()
+{
+  _iHead = 0;
+  _iTail = 0;
+}
+
+template <int N>
+int RingBufferN<N>::read_char()
+{
+  if(_iTail == _iHead)
+    return -1;
+
+  uint8_t value = _aucBuffer[_iTail];
+  _iTail = nextIndex(_iTail);
+
+  return value;
+}
+
+template <int N>
+int RingBufferN<N>::available()
+{
+  int delta = _iHead - _iTail;
+
+  if(delta < 0)
+    return N + delta;
+  else
+    return delta;
+}
+
+template <int N>
+int RingBufferN<N>::availableForStore()
+{
+  if (_iHead >= _iTail)
+    return N - 1 - _iHead + _iTail;
+  else
+    return _iTail - _iHead - 1;
+}
+
+template <int N>
+int RingBufferN<N>::peek()
+{
+  if(_iTail == _iHead)
+    return -1;
+
+  return _aucBuffer[_iTail];
+}
+
+template <int N>
+int RingBufferN<N>::nextIndex(int index)
+{
+  return (uint32_t)(index + 1) % N;
+}
+
+template <int N>
+bool RingBufferN<N>::isFull()
+{
+  return (nextIndex(_iHead) == _iTail);
+}
+
 #endif /* _RING_BUFFER_ */
+
+#endif /* __cplusplus */
