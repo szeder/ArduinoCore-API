@@ -16,7 +16,7 @@ template<typename T> struct __container__ {
 };
 
 // C++ only overloaded version of attachInterrupt function
-template<typename T> void attachInterrupt(pin_size_t interruptNum, voidTemplateFuncPtrParam<T> userFunc, int mode, T& param) {
+template<typename T> void attachInterrupt(pin_size_t interruptNum, voidTemplateFuncPtrParam<T> userFunc, PinStatus mode, T& param) {
 
   struct __container__<T> *cont = new __container__<T>();
   cont->param = &param;
@@ -33,7 +33,7 @@ template<typename T> void attachInterrupt(pin_size_t interruptNum, voidTemplateF
   attachInterruptParam(interruptNum, f, mode, cont);
 }
 
-template<typename T> void attachInterrupt(uint8_t interruptNum, voidTemplateFuncPtrParam<T*> userFunc, int mode, T* param) {
+template<typename T> void attachInterrupt(pin_size_t interruptNum, voidTemplateFuncPtrParam<T*> userFunc, PinStatus mode, T* param) {
   attachInterruptParam(interruptNum, (voidFuncPtrParam)userFunc, mode, (void*)param);
 }
 
