@@ -8,9 +8,9 @@ Including this repo in your existing Arduino core will allow the language to gro
 For backwards compatibility, every revision of this repo will increase `ARDUINO_API_VERSION` define.
 
 Some cores have been ported to the new structure, for example:
-* megaAVR (http://github.com/arduino/ArduinoCore-megaAVR) 
-* classic AVR (http://github.com/arduino/ArduinoCore-avr/tree/api) 
-* SAMD (http://github.com/arduino/ArduinoCore-samd/tree/api)
+* megaAVR (https://github.com/arduino/ArduinoCore-megaAVR) 
+* classic AVR (https://github.com/arduino/ArduinoCore-avr/tree/api) 
+* SAMD (https://github.com/arduino/ArduinoCore-samd/tree/api)
 
 These repositories **don't** contain the needed `api` subfolder; to "complete" the core you need to copy or symlink the `api` folder from this repo to the target's `cores/arduino` folder.
 
