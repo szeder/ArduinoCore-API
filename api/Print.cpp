@@ -132,13 +132,6 @@ size_t Print::print(double n, int digits)
   return printFloat(n, digits);
 }
 
-size_t Print::println(const __FlashStringHelper *ifsh)
-{
-  size_t n = print(ifsh);
-  n += println();
-  return n;
-}
-
 size_t Print::print(const Printable& x)
 {
   return x.printTo(*this);
@@ -147,6 +140,13 @@ size_t Print::print(const Printable& x)
 size_t Print::println(void)
 {
   return write("\r\n");
+}
+
+size_t Print::println(const __FlashStringHelper *ifsh)
+{
+  size_t n = print(ifsh);
+  n += println();
+  return n;
 }
 
 size_t Print::println(const String &s)
