@@ -57,6 +57,7 @@ class Print
     size_t print(const __FlashStringHelper *);
     size_t print(const String &);
     size_t print(const char[]);
+    size_t print(bool);
     size_t print(char);
     size_t print(unsigned char, int = DEC);
     size_t print(int, int = DEC);
@@ -71,6 +72,7 @@ class Print
     size_t println(const __FlashStringHelper *);
     size_t println(const String &s);
     size_t println(const char[]);
+    size_t println(bool);
     size_t println(char);
     size_t println(unsigned char, int = DEC);
     size_t println(int, int = DEC);

@@ -63,6 +63,11 @@ size_t Print::print(const char str[])
   return write(str);
 }
 
+size_t Print::print(bool b)
+{
+  return write(b ? '1' : '0');
+}
+
 size_t Print::print(char c)
 {
   return write(c);
@@ -159,6 +164,13 @@ size_t Print::println(const String &s)
 size_t Print::println(const char c[])
 {
   size_t n = print(c);
+  n += println();
+  return n;
+}
+
+size_t Print::println(bool b)
+{
+  size_t n = print(b);
   n += println();
   return n;
 }
